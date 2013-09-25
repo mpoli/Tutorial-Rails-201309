@@ -1,0 +1,339 @@
+
+%
+% Copyright (c) 2013 Marco A. Poli.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.3
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+% A copy of the license is included in the file entitled ``LICENSE.txt''.
+% This work cannot be distributed without such file.
+% 
+\documentclass[bidi]{tufte-handout}
+
+\usepackage[english,portuguese,brazil]{babel}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+
+\setromanfont[Mapping=tex-text]{TeXGyreSchola}
+\setsansfont[Scale=MatchLowercase,Mapping=tex-text]{TeXGyreHeros}
+\setmonofont[Scale=MatchLowercase]{TeXGyreCursor}
+
+\usepackage{amsmath}
+\usepackage{booktabs} % for tables
+
+\title{Passo--a--passo Rails Composer}
+\author{Marco A. Poli}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Mosta passo a passo como criar um novo projeto com o rails composer, um ``facilitador'' que já faz os principais passos das extensões mais usadas em novos projetos Ruby on Rails\sidenote{www.rubyonrails.org}.
+\end{abstract}
+
+\section{O Rails Composer}
+
+O Composer é um script desenvolvido pelo RailsApps.org, um site que vende tutoriais online para desenvolvimento rápido web, incluindo muitos para Ruby on Rails (RoR). Ele visa facilitar ainda mais o processo de criação de novos projetos RoR através do conceito de ``Receitas'' (\emph{recipies} em inglês), onde o script faz a instalação e configuração de várias gemas opcionais, mas que são costumeiramente utilizadas em projetos RoR. Como examplo, temos gemas de autenticação como o \emph{Devise}, gemas de autorização com o \emph{CanCan}\sidenote{Autenticação e autorização são coisas diferentes: na autenticação você cria uma sessão que identifica um usuário, fazendo login. Na autorização você verifica se aquele usuário logado da sessão tem permissão para executar certa tarefa.}, entre outras, além de criar página de administração e página Home e de gerenciamento de usuários.
+
+O projeto RailsApps provê aplicações de exemplo que desenvolvedores utilizam como aplicações de início.\cite{rails_apps_composer}
+
+\section{Pré--requisitos}
+Para seguir com esse tutorial, você:
+
+\begin{enumerate}
+  \item Ter o Ruby 2.0, e o Ruby On Rails 4.0.0 instalados e funcionando\sidenote{A instalação desses pré--requisitos será tema de um novo tutorial pelo mesmo autor, mas farta documentação pode ser encontrada na Internet a respeito.};
+  \item ter um servidor PostgreSQL versão 9.2 ou superior instalado na máquina local;
+  \item conseguir conectar ao servidor PostgreSQL em uma conexão local com usuário e senha\sidenote{Note que conexão local é feita por \emph{sockets}, diferentemente de uma conexão de rede para a máquina local (geralmente representada como localhost ou 127.0.0.1), que é feita pela interface de rede};
+  \item possuir um usuário e senha para o PostgreSQL que tenha permissão para criar novos bancos de dados\sidenote{Não necessita ser administrador, apenas possuir permissão para criar novos bancos de dados};
+  \item ter o software de controle de versão \emph{git} instalado e funcionando.
+\end{enumerate}
+
+\section{Escopo}
+Apesar de focar no iniciante, esse tutorial assume que você já tem uma instalação funcional de RoR, e se limita a mostrar os passos para executar o script e a criação de uma nova aplicação com as opções e gemas recomendadas para o início de um projeto de aprendizado em RoR.
+
+\section{Criando o Projeto}
+
+Para criar o projeto, basta executar o ``rails new'' mas com a opção de rodar o script do rails composer. Como o composer, e em geral todas as gemas de RoR e o próprio projeto RoR são muito dinâmicos, foi criada uma versão online do script do dia em que esse tutorial foi escrito, para que alterações no script não causem ao leitor problemas para seguir esse tutorial. Essa versão online pode ser encontrada em \emph{https://github.com/mpoli/rails-composer/tree/201309-tutorial} e não refletirá alterações subsequentes ao composer.\sidenote{O projeto rails composer pode ser encontrado em https://github.com/RailsApps/rails-composer}
+
+\begin{verbatim}
+rails new <meu_aplicativo> -m https://raw.
+github.com/mpoli/rails-composer/201309-
+tutorial/composer.rb
+\end{verbatim}\sidenote{Sempre que houver algo entre ``<'' e ``>'', substitua por algo que couber, inclusive removendo os sinais de < e >}
+
+O rails vai, então, criar o diretório para o projeto, cujo nome será o mesmo que você colocar em \emph{<meu\_projeto>}, que vai ser o diretório--raiz da sua aplicação.
+
+A listagem de saída deve ser:
+
+\begin{verbatim}
+      create
+      create  README.rdoc
+      create  Rakefile
+      create  config.ru
+      create  .gitignore
+      create  Gemfile
+      create  app
+      create  app/assets/javascripts/application.js
+      create  app/assets/stylesheets/application.css
+      create  app/controllers/application_controller.rb
+      create  app/helpers/application_helper.rb
+      create  app/views/layouts/application.html.erb
+      create  app/assets/images/.keep
+      create  app/mailers/.keep
+      create  app/models/.keep
+      create  app/controllers/concerns/.keep
+      create  app/models/concerns/.keep
+      create  bin
+      create  bin/bundle
+      create  bin/rails
+      create  bin/rake
+      create  config
+      create  config/routes.rb
+      create  config/application.rb
+      create  config/environment.rb
+      create  config/environments
+      create  config/environments/development.rb
+      create  config/environments/production.rb
+      create  config/environments/test.rb
+      create  config/initializers
+      create  config/initializers/backtrace_silencers.rb
+      create  config/initializers/filter_parameter_logging.rb
+      create  config/initializers/inflections.rb
+      create  config/initializers/mime_types.rb
+      create  config/initializers/secret_token.rb
+      create  config/initializers/session_store.rb
+      create  config/initializers/wrap_parameters.rb
+      create  config/locales
+      create  config/locales/en.yml
+      create  config/boot.rb
+      create  config/database.yml
+      create  db
+      create  db/seeds.rb
+      create  lib
+      create  lib/tasks
+      create  lib/tasks/.keep
+      create  lib/assets
+      create  lib/assets/.keep
+      create  log
+      create  log/.keep
+      create  public
+      create  public/404.html
+      create  public/422.html
+      create  public/500.html
+      create  public/favicon.ico
+      create  public/robots.txt
+      create  test/fixtures
+      create  test/fixtures/.keep
+      create  test/controllers
+      create  test/controllers/.keep
+      create  test/mailers
+      create  test/mailers/.keep
+      create  test/models
+      create  test/models/.keep
+      create  test/helpers
+      create  test/helpers/.keep
+      create  test/integration
+      create  test/integration/.keep
+      create  test/test_helper.rb
+      create  tmp/cache
+      create  tmp/cache/assets
+      create  vendor/assets/javascripts
+      create  vendor/assets/javascripts/.keep
+      create  vendor/assets/stylesheets
+      create  vendor/assets/stylesheets/.keep
+       apply  https://raw.github.com/mpoli/rails-composer/201309-tutorial/composer.rb
+    composer  WOOT! The recipes you've selected are known to work together.
+    composer  You are using Rails version 4.0.0.
+    composer  Using rails_apps_composer recipes to generate an application.
+      insert    config/application.rb
+      recipe  Running core recipe...
+        core  selected all core recipes
+      recipe  Running git recipe...
+         git  initialize git
+      remove    .gitignore
+      create    .gitignore
+         run    git init from "."
+Initialized empty Git repository in /tmp/app_teste/.git/
+         run    git add -A from "."
+         run    git commit -qm "rails_apps_composer: initial commit" from "."
+      recipe  Running railsapps recipe...
+    question  Install an example application for Rails 4.0?
+          1)  Build a RailsApps starter application
+          2)  Build a contributed application
+          3)  I want to build my own application
+   railsapps  Enter your selection:
+
+\end{verbatim}
+
+Nesse momento começam as perguntar do composer para determinar quais receitas você quer que ele faça, que determinará quais as configurações do banco de dados, quais gemas serão instaladas e quais opções de teste, entre outras.
+
+Nessa primeira pergunta você pode escolher entre uma das aplicações pré--definidas do composer, na opção 1, uma aplicação de terceiros que foi disponibilizada pelo composer (atualmente não existe nenhuma) com a opção 2 e construir a sua própria aplicação, a partir da seleção de perguntas que o composer vai te fazer, com a opção 3.
+
+Como isso é um tutorial, vamos na opção \emph{3}.
+
+\begin{verbatim}
+   railsapps  Enter your selection: 3
+      recipe  Running setup recipe...
+       setup  Your operating system is linux-gnu.
+       setup  You are using Ruby version 2.0.0.
+       setup  You are using Rails version 4.0.0.
+    question  Web server for development?
+          1)  WEBrick (default)
+          2)  Thin
+          3)  Unicorn
+          4)  Puma
+       setup  Enter your selection:  3
+       setup  Enter your selection: 3
+    question  Web server for production?
+          1)  Same as development
+          2)  Thin
+          3)  Unicorn
+          4)  Puma
+       setup  Enter your selection: 3
+    question  Database used in development?
+          1)  SQLite
+          2)  PostgreSQL
+          3)  MySQL
+          4)  MongoDB
+       setup  Enter your selection: 2
+    question  Template engine?
+          1)  ERB
+          2)  Haml
+          3)  Slim (experimental)
+       setup  Enter your selection: 1
+    question  Unit testing?
+          1)  Test::Unit
+          2)  RSpec
+          3)  MiniTest
+       setup  Enter your selection: 2
+    question  Integration testing?
+          1)  None
+          2)  RSpec with Capybara
+          3)  Cucumber with Capybara
+          4)  Turnip with Capybara
+          5)  MiniTest with Capybara
+       setup  Enter your selection:
+
+      setup  Enter your selection: 3
+    question  Continuous testing?
+          1)  None
+          2)  Guard
+       setup  Enter your selection: 2
+    question  Fixture replacement?
+          1)  None
+          2)  Factory Girl
+          3)  Machinist
+          4)  Fabrication
+       setup  Enter your selection: 2
+    question  Front-end framework?
+          1)  None
+          2)  Twitter Bootstrap
+          3)  Zurb Foundation
+          4)  Skeleton
+          5)  Just normalize CSS for consistent styling
+       setup  Enter your selection: 2
+    question  Twitter Bootstrap version?
+          1)  Twitter Bootstrap (Less)
+          2)  Twitter Bootstrap (Sass)
+       setup  Enter your selection: 1
+    question  Add support for sending email?
+          1)  None
+          2)  Gmail
+          3)  SMTP
+          4)  SendGrid
+          5)  Mandrill
+       setup  Enter your selection: 1
+    question  Authentication?
+          1)  None
+          2)  Devise
+          3)  OmniAuth
+       setup  Enter your selection: 2
+    question  Devise modules?
+          1)  Devise with default modules
+          2)  Devise with Confirmable module
+          3)  Devise with Confirmable and Invitable modules
+       setup  Enter your selection:
+       setup  Enter your selection: 1
+    question  Authorization?
+          1)  None
+          2)  CanCan with Rolify
+       setup  Enter your selection: 2
+    question  Use a form builder gem?
+          1)  None
+          2)  SimpleForm
+       setup  Enter your selection: 2
+    question  Install a starter app?
+          1)  None
+          2)  Home Page
+          3)  Home Page, User Accounts
+          4)  Home Page, User Accounts, Admin Dashboard
+       setup  Enter your selection: 4
+      create    README
+      append    README
+      recipe  Running readme recipe...
+      recipe  Running gems recipe...
+      insert    Gemfile
+        gsub    Gemfile
+        gsub    Gemfile
+        gsub    Gemfile
+        gsub    Gemfile
+        gsub    Gemfile
+         run    git add -A from "."
+         run    git commit -qm "rails_apps_composer: Gemfile" from "."
+      recipe  Running testing recipe...
+      recipe  Running email recipe...
+      recipe  Running models recipe...
+      recipe  Running controllers recipe...
+      recipe  Running views recipe...
+      recipe  Running routes recipe...
+      recipe  Running frontend recipe...
+      recipe  Running init recipe...
+      recipe  Running apps4 recipe...
+      recipe  Running prelaunch recipe...
+      recipe  Running prelaunch recipe...
+      recipe  Running extras recipe...
+      extras  Set a robots.txt file to ban spiders? (y/n) y
+      extras  Create a GitHub repository? (y/n) n
+      extras  Use application.yml file for environment variables? (y/n) y
+      extras  Reduce assets logger noise during development? (y/n) y
+      extras  Improve error reporting with 'better_errors' during development? (y/n) y
+      extras  Use or create a project-specific rvm gemset? (y/n) n
+      extras  recipe setting quiet_assets for reduced asset pipeline logging
+      extras  recipe creating application.yml file for environment variables
+      extras  recipe adding better_errors gem
+      extras  recipe banning spiders by modifying 'public/robots.txt'
+      extras  Add 'therubyracer' JavaScript runtime (for Linux users without node.js)? (y/n) y
+    composer  Installing gems. This will take a while.
+         run    bundle install --without production from "."
+Fetching gem metadata from https://rubygems.org/.........
+
+...
+
+Your bundle is complete!
+Gems in the group production were not installed.
+Use `bundle show [gemname]` to see where a bundled gem is installed.
+    composer  Updating gem paths.
+    composer  Running 'after bundler' callbacks.
+gems
+      remove    config/database.yml
+      create    config/database.yml
+        gems  Username for PostgreSQL?(leave blank to use the app name) username
+        gsub    config/database.yml
+        gems  Password for PostgreSQL user username? password
+        gsub    config/database.yml
+        gems  set config/database.yml for username/password username/password
+        gsub    config/database.yml
+        gsub    config/database.yml
+        gsub    config/database.yml
+        gems  Okay to drop all existing databases named myapp? 'No' will abort immediately! (y/n) y
+         run    bundle exec rake db:drop from "."
+
+
+...
+
+
+\end{verbatim}
+
+\bibliography{rails_composer}
+\end{document}
